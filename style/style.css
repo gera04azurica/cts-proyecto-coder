@@ -82,7 +82,7 @@
 
 
 /* encabezado abajo */
-main { background-color: #8f143b;
+.principal { background-color: #8f143b;
     color:#fff;
     padding: 60px;
     text-align: center; /* Centra el contenido horizontalmente */
