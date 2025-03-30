@@ -1,0 +1,27 @@
+@use "sass:color"; // Importa el módulo color
+
+@mixin boton-formulario($padding, $border-radius, $bg-color, $border-color) {
+  background-color: $bg-color;
+  color: white;
+  padding: $padding;
+  border: 2px solid $border-color;
+  border-radius: $border-radius;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: color.scale($bg-color, $lightness: 10%);
+    color: #e5e5e5;
+  }
+}
+  
+  // Uso del mixin
+.btn-primario {
+    @include boton-formulario(12px, 5px, #8f143b, white);
+  }
+  
+  .btn-secundario {
+    @include boton-formulario(10px, 4px, #4caf50, #f8f9fa);
+  }
+  
