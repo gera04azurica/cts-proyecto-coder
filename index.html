@@ -139,9 +139,14 @@
   
       <div class="form-container">
           <h4>Formulario de contacto</h4>
-          <form action="https://formsubmit.co/gerazurica@gmail.com" method="POST">
+          <<form
+  id="contactForm"
+  action="https://formsubmit.co/gerazurica@gmail.com"
+  method="POST"
+>
   <input type="hidden" name="_captcha" value="false">
   <input type="hidden" name="_next" value="https://centrotecnicosilea.com/pages/gracias.html">
+
   <label for="nombre">Nombre completo:</label>
   <input type="text" id="nombre" name="nombre" required>
 
@@ -201,5 +206,43 @@
       </div>
   </div>
 </footer>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+
+    if (!form) return; // por si no existe en alguna página
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const payload = {
+        nombre:   formData.get('nombre'),
+        email:    formData.get('email'),
+        telefono: formData.get('telefono'),
+        mensaje:  formData.get('mensaje')
+      };
+
+      try {
+        const response = await fetch('/api/capi', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          console.error('Error al enviar a CAPI:', response.statusText);
+        } else {
+          console.log('Evento enviado a CAPI correctamente');
+        }
+      } catch (err) {
+        console.error('Falló la llamada a /api/capi:', err);
+      }
+
+      // Finalmente, reenvía el formulario a FormSubmit.co
+      form.submit();
+    });
+  });
+</script>
   </body>
 </html>

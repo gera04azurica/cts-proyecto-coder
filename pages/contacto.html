@@ -76,9 +76,14 @@
     
         <div class="form-container">
             <h4>Formulario de contacto</h4>
-            <form action="https://formsubmit.co/gerazurica@gmail.com" method="POST">
+            <form
+  id="contactForm"
+  action="https://formsubmit.co/gerazurica@gmail.com"
+  method="POST"
+>
   <input type="hidden" name="_captcha" value="false">
   <input type="hidden" name="_next" value="https://centrotecnicosilea.com/pages/gracias.html">
+
   <label for="nombre">Nombre completo:</label>
   <input type="text" id="nombre" name="nombre" required>
 
@@ -139,5 +144,49 @@
       </div>
   </div>
 </footer>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+
+    form.addEventListener('submit', async (e) => {
+      // 1) Evita que el navegador envíe el formulario de inmediato
+      e.preventDefault();
+
+      // 2) Lee los valores de cada campo
+      const formData = new FormData(form);
+      const payload = {
+        nombre:   formData.get('nombre'),
+        email:    formData.get('email'),
+        telefono: formData.get('telefono'),
+        mensaje:  formData.get('mensaje')
+      };
+
+      // 3) Envía los datos a tu endpoint CAPI (/api/capi)
+      try {
+        const response = await fetch('/api/capi', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+
+        // (Opcional) Puedes validar response.ok si quieres mostrar un error al usuario.
+        if (!response.ok) {
+          console.error('❌ Error al enviar a CAPI:', response.statusText);
+        } else {
+          console.log('✅ Evento enviado a CAPI correctamente');
+        }
+      } catch (err) {
+        console.error('❌ Falló la llamada a /api/capi:', err);
+      }
+
+      // 4) Tras llamar a CAPI, reenvía el formulario a FormSubmit.co
+      //    Esto hará que el navegador envíe el form a:
+      //      action="https://formsubmit.co/gerazurica@gmail.com"
+      //    y luego FormSubmit redirigirá al _next que ya tienes configurado.
+      form.submit();
+    });
+  });
+</script>
+
 </body>
 </html>
